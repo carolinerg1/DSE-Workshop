@@ -155,6 +155,14 @@ CREATE TABLE <yourkeyspace>.vehicle_daily_rollup (
 ```
 
 
+Once you have created the tables, load the data from sample file vehicle_hist.csv using [CQL COPY](http://docs.datastax.com/en/cql/3.1/cql/cql_reference/copy_r.html)
+
+```
+COPY <yourkeyspace>.vehicle_hist from 'vehicle_hist.csv' with header=true;
+```
+
+Another way to load data is by using [Cassandra Loader](https://github.com/brianmhess/cassandra-loader) or by writing a simple app
+
 
 
 ----------
