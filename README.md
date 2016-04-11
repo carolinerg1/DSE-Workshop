@@ -59,10 +59,18 @@ Try the following CQL commands in DevCenter. In addition to DevCenter, you can a
 Let's make our first Cassandra Keyspace! If you are using uppercase letters, use double quotes around the keyspace.
 
 ```
-CREATE KEYSPACE <Enter your name> WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3 };
+CREATE KEYSPACE <Enter your name> WITH replication = {'class': 'NetworkTopologyStrategy', 'DC1': 3 };
 ```
 
-And just like that, any data within any table you create under your keyspace will automatically be replicated 3 times. Let's keep going and create ourselves a table. You can follow my example or be a rebel and roll your own. 
+And just like that, any data within any table you create under your keyspace will automatically be replicated 3 times. 
+
+Note: if you only have 1 node in 1 data center, use SimpleStrategy: 
+
+```
+CREATE KEYSPACE <Enter your name> WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 };
+```
+
+Let's keep going and create ourselves a table. You can follow my example or be a rebel and roll your own. 
 
 ```
 CREATE TABLE <yourkeyspace>.sales (
@@ -104,6 +112,50 @@ Hands On Cassandra Primary Keys
 There are just a few key concepts you need to know when beginning to data model in Cassandra. But if you want to know the real secret sauce to solving your use cases and getting great performance, then you need to understand how Primary Keys work in Cassandra. 
 
 Let's dive in! Check out [this exercise for understanding how primary keys work](https://github.com/robotoil/Cassandra-Primary-Key-Exercise/blob/master/README.md) and the types of queries enabled by different primary keys.
+
+----------
+
+
+Fleet Example - Data Model 
+-------------------
+
+Create the following tables that will be used in the fleet management example
+
+```
+CREATE TABLE <yourkeyspace>.metrics (
+    fleet_id text PRIMARY KEY,
+    idle_time double,
+    vehicles int
+);
+
+CREATE TABLE <yourkeyspace>.vehicle_hist (
+    fleet_id text,
+    vin text,
+    day int,
+    time timestamp,
+    hour int,
+    idle_time double,
+    PRIMARY KEY ((fleet_id, vin, day), time)
+) WITH CLUSTERING ORDER BY (time DESC);
+
+CREATE TABLE <yourkeyspace>.fleet_daily_rollup (
+    fleet_id text,
+    day int,
+    idle_time double,
+    PRIMARY KEY (fleet_id, day)
+) WITH CLUSTERING ORDER BY (day ASC);
+
+CREATE TABLE <yourkeyspace>.vehicle_daily_rollup (
+    fleet_id text,
+    day int,
+    idle_time double,
+    vin text,
+    PRIMARY KEY ((fleet_id, day), idle_time, vin)
+) WITH CLUSTERING ORDER BY (idle_time ASC, vin ASC);
+```
+
+
+
 
 ----------
 
