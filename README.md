@@ -116,8 +116,11 @@ Let's dive in! Check out [this exercise for understanding how primary keys work]
 ----------
 
 
-Fleet Example - Data Model 
+Fleet Example 
 -------------------
+
+#### Data Model
+
 
 Create the following tables that will be used in the fleet management example
 
@@ -178,7 +181,7 @@ What if you want to retrieve all the history for a fleet?
 select * from vehicle_hist where fleet_id = '985'
 ```
 
-Why didn't this work?
+Why didn't this work? (how to do it: skip to DSE Search section below!)
 
 
 ----------
@@ -328,7 +331,54 @@ SELECT * FROM amazon.metadata WHERE solr_query='{"q":"*:*", "facet":{"field":"ca
 ```
 Want to see a really cool example of a live DSE Search app? Check out [KillrVideo](http://www.killrvideo.com/) and its [Git](https://github.com/luketillman/killrvideo-csharp) to see it in action. 
 
+
+Fleet Example - Advanced Queries
+-------------
+Going back to our query from before, get all the history for a fleet, here's how you would do it with DSE Search
+
+#### Create Solr Core
+
+```
+dsetool create_core <yourkeyspace>.vehicle_hist generateResources=true reindex=true
+```
+
+You can view the core via [Solr Admin UI](http://54.215.239.149:8983/solr/#/<yourkeyspace>.vehicle_hist)
+
+
+#### Sample Queries
+
+Lets try again to get all the history for fleet ID 985:
+
+```
+select * from vehicle_hist where solr_query = '{"q":"fleet_id:985"}';
+```
+
+Return all the activity on March 23, 2016
+
+```
+select * from vehicle_hist where solr_query = '{"q": "time:[2016-03-21T00:00:00Z TO 2016-03-23T23:59:59Z] "}';
+```
+
+What about vehicles that are idle for more than 11.999 sec, sorted by by most idle:
+
+```
+select * from vehicle_hist where solr_query = '{"q":"idle_time:[11.999 TO *]","sort":"idle_time desc"}' ;
+```
+
+Top 10 days most idle:
+
+```
+select day, idle_time from vehicle_hist where solr_query = '{"q":"*:*","sort":"idle_time desc"}' limit 10 ;
+```
+
+Count of history per day for Fleet ID 985
+
+```
+select * from vehicle_hist where  solr_query='{"q":"fleet_id:985","facet":{"range":"time", "f.time.range.start":"2016-03-19T00:00:00Z", "f.time.range.end":"2016-03-29T23:59:59Z", "f.time.range.gap":"+1DAY", "method":"fcs"}}'
+```
+
 ----------
+
 
 
 Hands On DSE Analytics
