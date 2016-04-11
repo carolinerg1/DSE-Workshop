@@ -155,14 +155,30 @@ CREATE TABLE <yourkeyspace>.vehicle_daily_rollup (
 ```
 
 
-Once you have created the tables, load the data from sample file vehicle_hist.csv using [CQL COPY](http://docs.datastax.com/en/cql/3.1/cql/cql_reference/copy_r.html)
+Once you have created the tables, load the data from sample file [vehicle_hist_small.csv](https://github.com/carolinerg1/DSE-Workshop/blob/master/vehicle_hist_small.csv) using [CQL COPY](http://docs.datastax.com/en/cql/3.1/cql/cql_reference/copy_r.html)
 
 ```
-COPY <yourkeyspace>.vehicle_hist from 'vehicle_hist.csv' with header=true;
+COPY <yourkeyspace>.vehicle_hist from 'vehicle_hist_small.csv' with header=true;
 ```
 
 Another way to load data is by using [Cassandra Loader](https://github.com/brianmhess/cassandra-loader) or by writing a simple app
 
+
+#### Queries
+
+Try selecting some data:
+
+```
+select * from vehicle_hist where fleet_id = '985' and vin = '214876152631' and day = 20160322;
+```
+
+What if you want to retrieve all the history for a fleet?
+
+```
+select * from vehicle_hist where fleet_id = '985'
+```
+
+Why didn't this work?
 
 
 ----------
