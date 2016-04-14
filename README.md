@@ -249,6 +249,9 @@ For more detailed classed on data modeling, consistency, and Cassandra 101, chec
 Hands On DSE Search.
 -------------
 DSE Search is awesome. You can configure which columns of which Cassandra tables you'd like indexed in **lucene** format to make extended searches more efficient while enabling features such as text search and geospatial search. 
+  
+  
+   
 
 Let's start off by indexing the tables we've already made. Here's where the dsetool really comes in handy:
 
@@ -376,7 +379,13 @@ Count of history per day for Fleet ID 985
 ```
 select * from vehicle_hist where  solr_query='{"q":"fleet_id:985","facet":{"range":"time", "f.time.range.start":"2016-03-19T00:00:00Z", "f.time.range.end":"2016-03-29T23:59:59Z", "f.time.range.gap":"+1DAY", "method":"fcs"}}'
 ```
-
+   
+   
+   
+#### ** Looking for additional DSE Search examples, check out this [ tutorial](https://github.com/carolinerg1/DSE-Workshop/blob/master/DSE%20Search/README.md) ** 
+   
+   
+   
 ----------
 
 
