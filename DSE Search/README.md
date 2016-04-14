@@ -19,20 +19,34 @@ This document will guide you through how to get started using DSE Search. This i
 
 5.	How to apply changes to your Solr schema
    
-
+   
   
 Sample queries include:
-•	Using AND/OR
-•	How to escape special characters
-•	Partial text search
-•	Sorting
-•	Date ranges
-•	Facets
-•	Facets on date range
-•	Joining Solr cores
-  
 
-The last steps will walk you through a scenario where you already have data in your table and only want to index certain fields:
+•	Using AND/OR
+
+•	How to escape special characters
+
+•	Partial text search
+
+•	Sorting
+
+•	Date ranges
+
+•	Facets
+
+•	Facets on date range
+
+•	Joining Solr cores
+
+    
+   
+      
+
+
+
+   
+   The last steps will walk you through a scenario where you already have data in your table and only want to index certain fields:
 
 1.	Use dsetool to auto generate the Solr config files without indexing the data
 
